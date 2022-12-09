@@ -4,6 +4,7 @@ const { Thoughts, User } = require("../models");
 module.exports = {
   getUsers(req, res) {
     User.find()
+      .select("-__v")
       .then(async (users) => {
         const userObj = {
           users,
@@ -19,6 +20,7 @@ module.exports = {
   getSingleUser(req, res) {
     User.findOne({ _id: req.params.userId })
       .select("-__v")
+      //  .populate("thoughts")
       .then(async (user) =>
         !user
           ? res
@@ -76,5 +78,18 @@ module.exports = {
           : res.json(user)
       )
       .catch((err) => res.status(500).json(err));
+  },
+
+  addFriend(req, res) {
+    User.findOneAndUpdate(
+      { username: req.body.username },
+      { $push: { friends: friends._id } },
+      { new: true }
+    );
+    res.json(friends);
+  },
+
+  deleteFriend(req, res) {
+    User.findByIdAndDelete({ _id: req.params.friendId });
   },
 };

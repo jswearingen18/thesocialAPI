@@ -22,7 +22,14 @@ module.exports = {
 
   createThoughts(req, res) {
     Thoughts.create(req.body)
-      .then((thoughts) => res.json(thoughts))
+      .then( async (thoughts) => {
+
+        // we have a new thought OBJ
+        console.log(thoughts);
+        // How do we get the  USEr here
+        await User.findOneAndUpdate({ username: req.body.username }, { $push: { thoughts: thoughts._id }}, { new: true })
+        res.json(thoughts)
+      })
       .catch((err) => {
         console.log(err);
         return res.status(500).json(err);

@@ -1,4 +1,5 @@
 const { Schema, model } = require("mongoose");
+const { validate } = require("./Thoughts");
 
 const userSchema = new Schema(
   {
@@ -6,11 +7,13 @@ const userSchema = new Schema(
       type: String,
       unique: true,
       required: true,
+      trim: true,
     },
     email: {
       type: String,
       unique: true,
       required: true,
+      //validate: [validateEmail]
     },
     thoughts: [
       {
